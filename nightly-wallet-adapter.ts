@@ -50,7 +50,7 @@ export class NightlyWalletProvider
     transaction: NearTransaction
   ): Promise<NearSignedTransaction> {
     const request = await this._request("signTransaction", transaction);
-    const signature = request as Signature;
+    const signature = JSON.parse(request as any) as Signature;
 
     return {
       transaction: transaction,
@@ -68,7 +68,7 @@ export class NightlyWalletProvider
   async connect(onDisconnect?: () => void): Promise<NearAccount> {
     try {
       const request = await this._request("connect", onDisconnect);
-      const acc = request as NearAccount;
+      const acc = JSON.parse(request as any) as NearAccount;
       this.account = {
         accountId: acc.accountId,
         publicKey: PublicKey.from(acc.publicKey.toString()),
