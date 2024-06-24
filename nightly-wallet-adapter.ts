@@ -127,8 +127,8 @@ export class NightlyWalletProvider
         case "disconnect":
           return this.postMessage("disconnect", id, payload);
 
-        // case "importWalletsNear":
-        //   return this.postMessage("importWalletsNear", id, payload);
+        case "importWalletsNear":
+          return this.postMessage("importWalletsNear", id, payload);
 
         default:
           // throw errors for unsupported methods
