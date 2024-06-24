@@ -12,11 +12,11 @@
   },
   "scripts": {
     "prebuild": "tsc index.ts",
-    "build": "npx browserify index.js -t [ babelify --presets [ @babel/preset-env ] ] | uglifyjs > ./dist/nighty.min.js && mkdir ./dep && mv *.js ./dep && rm -r dep",
-    "prepare-publish": "mkdir -p dist && cp ../dist/nighty-min.js ./dist/nighty-min.js",
+    "build": "npx browserify index.js -t [ babelify --presets [ @babel/preset-env ] ] | uglifyjs > ./dist/nightly.min.js && mkdir ./dep && mv *.js ./dep && rm -r dep",
+    "prepare-publish": "mkdir -p dist && cp ../dist/nightly-min.js ./dist/nightly-min.js",
     "publish-npm-package": "npm run prepare-publish && npm publish --access public",
     "lint": "eslint . --fix",
     "test": "jest",
-    "lfs-fix": "git rm --cached --force ../dist/nighty-min.js && git add ../dist/nighty-min.js"
+    "lfs-fix": "git rm --cached --force ../dist/nightly-min.js && git add ../dist/nightly-min.js"
   }
 }

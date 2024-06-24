@@ -22,7 +22,7 @@ export class BaseProvider extends EventEmitter {
       network: this.providerNetwork,
     };
 
-    const provider = (window as any)?.nighty;
+    const provider = (window as any)?.nightly;
     if (!!provider && provider.postMessage) {
       provider.postMessage(object);
     } else {
