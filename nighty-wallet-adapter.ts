@@ -27,6 +27,7 @@ export class NightlyWalletProvider
     super({
       isDebug: false,
     });
+    this.callbacks = new Map();
     this._connected = false;
     this.account = { accountId: "", publicKey: DEFAULT_NEAR_PUBLIC_KEY };
   }
