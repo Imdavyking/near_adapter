@@ -1,6 +1,6 @@
 // nightly-wallet-provider.ts
 import { WalletProvider } from "./wallet-provider";
-import { SignMessageParams } from "@near-wallet-selector/core";
+import { SignMessageParams, SignedMessage } from "@near-wallet-selector/core";
 import { AccountImportData, NearAccount, NearNightly } from "./types";
 import {
   SignedTransaction as NearSignedTransaction,
@@ -63,6 +63,7 @@ export class NightlyWalletProvider
 
   async signMessage(msg: SignMessageParams): Promise<any> {
     const request = await this._request("signMessage", msg);
+    return JSON.parse(request as any) as SignedMessage;
   }
 
   async connect(onDisconnect?: () => void): Promise<NearAccount> {
@@ -126,8 +127,8 @@ export class NightlyWalletProvider
         case "disconnect":
           return this.postMessage("disconnect", id, payload);
 
-        case "importWalletsNear":
-          return this.postMessage("importWalletsNear", id, payload);
+        // case "importWalletsNear":
+        //   return this.postMessage("importWalletsNear", id, payload);
 
         default:
           // throw errors for unsupported methods
