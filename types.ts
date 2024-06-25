@@ -2,6 +2,7 @@ import { SignMessageParams, SignedMessage } from "@near-wallet-selector/core";
 import {
   SignedTransaction as NearSignedTransaction,
   Transaction as NearTransaction,
+  Signature,
 } from "near-api-js/lib/transaction";
 import { PublicKey as NearPublicKey } from "near-api-js/lib/utils";
 export interface NearAccount {
@@ -49,7 +50,6 @@ export declare class NearNightly {
   signMessage: (msg: SignMessageParams) => Promise<SignedMessage>;
   importWalletsNear: (privKeys: Array<AccountImportData>) => Promise<void>;
 }
-
 
 export interface AccountImportData {
   accountId: string;
