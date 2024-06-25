@@ -28,6 +28,11 @@ export declare class Nightly {
   invalidate(): void;
 }
 
+export declare class NearDappTx {
+  signature: Signature;
+  encoded: Uint8Array;
+}
+
 export declare class NearNightly {
   account: NearAccount;
   _onDisconnect: () => void;
@@ -44,6 +49,7 @@ export declare class NearNightly {
   signMessage: (msg: SignMessageParams) => Promise<SignedMessage>;
   importWalletsNear: (privKeys: Array<AccountImportData>) => Promise<void>;
 }
+
 
 export interface AccountImportData {
   accountId: string;

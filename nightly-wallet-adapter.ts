@@ -1,7 +1,12 @@
 // nightly-wallet-provider.ts
 import { WalletProvider } from "./wallet-provider";
 import { SignMessageParams, SignedMessage } from "@near-wallet-selector/core";
-import { AccountImportData, NearAccount, NearNightly } from "./types";
+import {
+  AccountImportData,
+  NearAccount,
+  NearDappTx,
+  NearNightly,
+} from "./types";
 import {
   SignedTransaction as NearSignedTransaction,
   Transaction as NearTransaction,
@@ -50,13 +55,13 @@ export class NightlyWalletProvider
     transaction: NearTransaction
   ): Promise<NearSignedTransaction> {
     const request = await this._request("signTransaction", transaction);
-    const signature = JSON.parse(request as any) as Signature;
+    const nearDappTx = JSON.parse(request as any) as NearDappTx;
 
     return {
       transaction: transaction,
-      signature: signature,
+      signature: nearDappTx.signature,
       encode: () => {
-        return new Uint8Array();
+        return nearDappTx.encoded;
       },
     };
   }
