@@ -1,6 +1,7 @@
 // nightly-wallet-provider.ts
 import { WalletProvider } from "./wallet-provider";
 import { SignMessageParams, SignedMessage } from "@near-wallet-selector/core";
+import { serialize } from "borsh";
 import {
   AccountImportData,
   NearAccount,
@@ -8,10 +9,24 @@ import {
   NearNightly,
 } from "./types";
 import {
-  SignedTransaction as NearSignedTransaction,
-  Transaction as NearTransaction,
+  Action,
+  SignedTransaction,
+  Transaction,
   Signature,
+  AccessKey,
+  FullAccessPermission,
+  AccessKeyPermission,
+  FunctionCallPermission,
+  CreateAccount,
+  DeployContract,
+  FunctionCall,
+  Transfer,
+  Stake,
+  AddKey,
+  DeleteKey,
+  DeleteAccount,
 } from "near-api-js/lib/transaction";
+
 import { PublicKey } from "near-api-js/lib/utils";
 import { ProviderRpcError } from "./error";
 import { BaseProvider } from "./base-adapter";
@@ -46,16 +61,25 @@ export class NightlyWalletProvider
   }
 
   async signAllTransactions(
-    transactions: NearTransaction[]
-  ): Promise<NearSignedTransaction[]> {
+    transactions: Transaction[]
+  ): Promise<SignedTransaction[]> {
     return Promise.all(transactions.map((tx) => this.signTransaction(tx)));
   }
 
-  async signTransaction(
-    transaction: NearTransaction
-  ): Promise<NearSignedTransaction> {
-    const request = await this._request("signTransaction", transaction);
+  async signTransaction(transaction: Transaction): Promise<SignedTransaction> {
+    const request = await this._request("signTransaction", {
+      ...transaction,
+      encoded: transaction.encode(),
+    });
+
     const nearDappTx = JSON.parse(request as any) as NearDappTx;
+    return new SignedTransaction({
+      transaction,
+      signature: new Signature({
+        keyType: transaction.publicKey.keyType,
+        data: nearDappTx.signature,
+      }),
+    });
 
     return {
       transaction: transaction,
