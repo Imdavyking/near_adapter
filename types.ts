@@ -43,7 +43,6 @@ export declare class Nightly {
 
 export declare class NearDappTx {
   signature: Signature;
-  encoded: Uint8Array;
 }
 
 export declare class NearNightly {

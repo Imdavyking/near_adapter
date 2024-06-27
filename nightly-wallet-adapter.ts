@@ -80,6 +80,7 @@ export class NightlyWalletProvider
           keyType: transaction.publicKey.keyType,
           data: nearDappTx.signature,
         }),
+        encode() {},
       });
     } catch (error) {
       console.log(" error signing transaction ");
