@@ -12,6 +12,7 @@ import {
   Action,
   SignedTransaction,
   Transaction,
+  SCHEMA,
   Signature,
   AccessKey,
   FullAccessPermission,
@@ -69,7 +70,7 @@ export class NightlyWalletProvider
   async signTransaction(transaction: Transaction): Promise<SignedTransaction> {
     const request = await this._request("signTransaction", {
       ...transaction,
-      encoded: transaction.encode(),
+      encoded: serialize(SCHEMA, transaction),
     });
 
     const nearDappTx = JSON.parse(request as any) as NearDappTx;
