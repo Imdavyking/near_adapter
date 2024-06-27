@@ -7,12 +7,12 @@ import {
   NearAccount,
   NearDappTx,
   NearNightly,
+  SCHEMA,
 } from "./types";
 import {
   Action,
   SignedTransaction,
   Transaction,
-  SCHEMA,
   Signature,
   AccessKey,
   FullAccessPermission,
@@ -68,27 +68,44 @@ export class NightlyWalletProvider
   }
 
   async signTransaction(transaction: Transaction): Promise<SignedTransaction> {
-    const request = await this._request("signTransaction", {
-      ...transaction,
-      encoded: serialize(SCHEMA, transaction),
-    });
+    try {
+      let { signerId, publicKey, nonce, receiverId, actions, blockHash } =
+        transaction;
+      let { keyType, data, verify, toString } = publicKey;
 
-    const nearDappTx = JSON.parse(request as any) as NearDappTx;
-    return new SignedTransaction({
-      transaction,
-      signature: new Signature({
-        keyType: transaction.publicKey.keyType,
-        data: nearDappTx.signature,
-      }),
-    });
+      transaction = new Transaction({
+        signerId,
+        publicKey: new PublicKey({ keyType, data, verify, toString }),
+        nonce,
+        receiverId,
+        actions,
+        blockHash,
+      });
+      const request = await this._request("signTransaction", {
+        ...transaction,
+        encoded: serialize(SCHEMA, transaction),
+      });
 
-    return {
-      transaction: transaction,
-      signature: nearDappTx.signature,
-      encode: () => {
-        return nearDappTx.encoded;
-      },
-    };
+      const nearDappTx = JSON.parse(request as any) as NearDappTx;
+      return new SignedTransaction({
+        transaction,
+        signature: new Signature({
+          keyType: transaction.publicKey.keyType,
+          data: nearDappTx.signature,
+        }),
+      });
+    } catch (error) {
+      console.log(" error signing transaction ");
+      console.log(error);
+    }
+
+    // return {
+    //   transaction: transaction,
+    //   signature: nearDappTx.signature,
+    //   encode: () => {
+    //     return nearDappTx.encoded;
+    //   },
+    // };
   }
 
   async signMessage(msg: SignMessageParams): Promise<any> {
