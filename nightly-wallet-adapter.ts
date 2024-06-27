@@ -7,7 +7,6 @@ import {
   NearAccount,
   NearDappTx,
   NearNightly,
-  SCHEMA,
 } from "./types";
 import {
   Action,
