@@ -69,21 +69,9 @@ export class NightlyWalletProvider
 
   async signTransaction(transaction: Transaction): Promise<SignedTransaction> {
     try {
-      let { signerId, publicKey, nonce, receiverId, actions, blockHash } =
-        transaction;
-      let { keyType, data, verify, toString } = publicKey;
-
-      transaction = new Transaction({
-        signerId,
-        publicKey: new PublicKey({ keyType, data, verify, toString }),
-        nonce,
-        receiverId,
-        actions,
-        blockHash,
-      });
       const request = await this._request("signTransaction", {
         ...transaction,
-        encoded: serialize(SCHEMA, transaction),
+        encoded: transaction.encode(),
       });
 
       const nearDappTx = JSON.parse(request as any) as NearDappTx;
