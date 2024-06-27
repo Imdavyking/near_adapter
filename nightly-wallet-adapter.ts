@@ -74,13 +74,21 @@ export class NightlyWalletProvider
       });
 
       const nearDappTx = JSON.parse(request as any) as NearDappTx;
+      const signature = new Signature({
+        keyType: transaction.publicKey.keyType,
+        data: nearDappTx.signature,
+      });
       return new SignedTransaction({
         transaction,
-        signature: new Signature({
-          keyType: transaction.publicKey.keyType,
-          data: nearDappTx.signature,
-        }),
-        encode() {},
+        signature: signature,
+        encode() {
+          const encoded = [
+            ...Array.from(transaction.encode()),
+            signature.keyType,
+            ...Array.from(signature.data),
+          ];
+          return new Uint8Array(encoded);
+        },
       });
     } catch (error) {
       console.log(" error signing transaction ");
