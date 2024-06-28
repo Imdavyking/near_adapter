@@ -67,41 +67,28 @@ export class NightlyWalletProvider
   }
 
   async signTransaction(transaction: Transaction): Promise<SignedTransaction> {
-    try {
-      const request = await this._request("signTransaction", {
-        ...transaction,
-        encoded: transaction.encode(),
-      });
+    const request = await this._request("signTransaction", {
+      ...transaction,
+      encoded: transaction.encode(),
+    });
 
-      const nearDappTx = JSON.parse(request as any) as NearDappTx;
-      const signature = new Signature({
-        keyType: transaction.publicKey.keyType,
-        data: nearDappTx.signature,
-      });
-      return new SignedTransaction({
-        transaction,
-        signature: signature,
-        encode() {
-          const encoded = [
-            ...Array.from(transaction.encode()),
-            signature.keyType,
-            ...Array.from(signature.data),
-          ];
-          return new Uint8Array(encoded);
-        },
-      });
-    } catch (error) {
-      console.log(" error signing transaction ");
-      console.log(error);
-    }
-
-    // return {
-    //   transaction: transaction,
-    //   signature: nearDappTx.signature,
-    //   encode: () => {
-    //     return nearDappTx.encoded;
-    //   },
-    // };
+    const nearDappTx = JSON.parse(request as any) as NearDappTx;
+    const signature = new Signature({
+      keyType: transaction.publicKey.keyType,
+      data: nearDappTx.signature,
+    });
+    return new SignedTransaction({
+      transaction,
+      signature: signature,
+      encode() {
+        const encoded = [
+          ...Array.from(transaction.encode()),
+          signature.keyType,
+          ...Array.from(signature.data),
+        ];
+        return new Uint8Array(encoded);
+      },
+    });
   }
 
   async signMessage(msg: SignMessageParams): Promise<any> {
